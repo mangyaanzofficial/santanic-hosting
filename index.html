@@ -1,0 +1,1435 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Santanic Store | Digital Store</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: #09090b;
+      color: #ffffff;
+      overflow-x: hidden;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    /* ================= NAVBAR ================= */
+
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      padding: 16px 7%;
+
+      background: rgba(9, 9, 11, 0.92);
+      backdrop-filter: blur(15px);
+
+      border-bottom: 1px solid #25252d;
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    .logo span {
+      color: #9d4edd;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 22px;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: #a8a8b3;
+      font-size: 14px;
+      transition: 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: #ffffff;
+    }
+
+    .cart-btn {
+      border: 1px solid #7133aa;
+      background: #1a1024;
+      color: white;
+
+      padding: 9px 15px;
+      border-radius: 9px;
+
+      cursor: pointer;
+    }
+
+    /* ================= HERO ================= */
+
+    .hero {
+      position: relative;
+
+      min-height: 500px;
+
+      display: flex;
+      align-items: center;
+
+      padding: 70px 8%;
+
+      background:
+        linear-gradient(
+          90deg,
+          rgba(9,9,11,0.95) 0%,
+          rgba(9,9,11,0.70) 50%,
+          rgba(9,9,11,0.30) 100%
+        ),
+        radial-gradient(
+          circle at 80% 30%,
+          #6d28a8 0%,
+          #241039 35%,
+          #09090b 75%
+        );
+
+      border-bottom: 1px solid #25252d;
+    }
+
+    .hero-content {
+      max-width: 650px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-badge {
+      display: inline-block;
+
+      padding: 8px 14px;
+
+      border-radius: 30px;
+
+      background: rgba(157, 78, 221, 0.15);
+
+      border: 1px solid #7133aa;
+
+      color: #c77dff;
+
+      font-size: 12px;
+      font-weight: bold;
+
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      font-size: 52px;
+      line-height: 1.1;
+
+      margin-bottom: 20px;
+    }
+
+    .hero h1 span {
+      background: linear-gradient(90deg, #c77dff, #8b5cf6);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .hero p {
+      color: #a8a8b3;
+
+      line-height: 1.8;
+
+      max-width: 570px;
+
+      margin-bottom: 28px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-block;
+
+      padding: 14px 24px;
+
+      background: linear-gradient(
+        135deg,
+        #7b2cbf,
+        #9d4edd
+      );
+
+      color: white;
+
+      border-radius: 10px;
+
+      font-weight: bold;
+
+      border: none;
+
+      cursor: pointer;
+
+      transition: 0.3s;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(157,78,221,0.3);
+    }
+
+    .btn-secondary {
+      display: inline-block;
+
+      padding: 14px 24px;
+
+      border: 1px solid #30303a;
+
+      color: white;
+
+      border-radius: 10px;
+
+      transition: 0.3s;
+    }
+
+    .btn-secondary:hover {
+      background: #16161b;
+    }
+
+    /* ================= STATS ================= */
+
+    .stats {
+      max-width: 1100px;
+
+      margin: -45px auto 0;
+
+      position: relative;
+
+      z-index: 10;
+
+      padding: 0 20px;
+    }
+
+    .stats-box {
+      display: grid;
+
+      grid-template-columns:
+        repeat(auto-fit, minmax(180px, 1fr));
+
+      background: #111116;
+
+      border: 1px solid #292932;
+
+      border-radius: 15px;
+
+      overflow: hidden;
+    }
+
+    .stat {
+      padding: 22px;
+
+      text-align: center;
+
+      border-right: 1px solid #292932;
+    }
+
+    .stat:last-child {
+      border-right: none;
+    }
+
+    .stat h3 {
+      font-size: 22px;
+      color: #c77dff;
+      margin-bottom: 7px;
+    }
+
+    .stat p {
+      font-size: 13px;
+      color: #888894;
+    }
+
+    /* ================= CONTAINER ================= */
+
+    .container {
+      max-width: 1200px;
+
+      margin: auto;
+
+      padding: 85px 20px;
+    }
+
+    .section-head {
+      display: flex;
+
+      justify-content: space-between;
+
+      align-items: end;
+
+      gap: 20px;
+
+      margin-bottom: 35px;
+    }
+
+    .section-head h2 {
+      font-size: 30px;
+
+      margin-bottom: 10px;
+    }
+
+    .section-head p {
+      color: #888894;
+
+      line-height: 1.6;
+    }
+
+    /* ================= SEARCH ================= */
+
+    .search-box input {
+      background: #121217;
+
+      border: 1px solid #30303a;
+
+      color: white;
+
+      padding: 13px 16px;
+
+      border-radius: 10px;
+
+      outline: none;
+
+      width: 250px;
+    }
+
+    .search-box input:focus {
+      border-color: #9d4edd;
+    }
+
+    /* ================= PRODUCTS ================= */
+
+    .products {
+      display: grid;
+
+      grid-template-columns:
+        repeat(auto-fit, minmax(250px, 1fr));
+
+      gap: 20px;
+    }
+
+    .product-card {
+      background: #111116;
+
+      border: 1px solid #282831;
+
+      border-radius: 15px;
+
+      overflow: hidden;
+
+      transition: 0.3s;
+    }
+
+    .product-card:hover {
+      transform: translateY(-6px);
+
+      border-color: #7432ad;
+
+      box-shadow:
+        0 15px 40px rgba(0,0,0,0.35);
+    }
+
+    .product-image {
+      height: 150px;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      font-size: 38px;
+
+      background:
+        linear-gradient(
+          135deg,
+          #1e1030,
+          #32144f,
+          #111116
+        );
+
+      border-bottom: 1px solid #282831;
+    }
+
+    .product-content {
+      padding: 20px;
+    }
+
+    .product-tag {
+      display: inline-block;
+
+      font-size: 10px;
+
+      padding: 5px 9px;
+
+      border-radius: 20px;
+
+      background: #1d1429;
+
+      color: #c77dff;
+
+      margin-bottom: 12px;
+    }
+
+    .product-content h3 {
+      margin-bottom: 10px;
+
+      font-size: 18px;
+    }
+
+    .product-content p {
+      color: #8d8d98;
+
+      font-size: 13px;
+
+      line-height: 1.6;
+
+      min-height: 42px;
+
+      margin-bottom: 18px;
+    }
+
+    .product-bottom {
+      display: flex;
+
+      justify-content: space-between;
+
+      align-items: center;
+
+      gap: 10px;
+    }
+
+    .price {
+      font-size: 17px;
+
+      font-weight: bold;
+
+      color: #c77dff;
+    }
+
+    .buy-btn {
+      background: #7b2cbf;
+
+      color: white;
+
+      border: none;
+
+      padding: 10px 14px;
+
+      border-radius: 8px;
+
+      cursor: pointer;
+
+      transition: 0.3s;
+    }
+
+    .buy-btn:hover {
+      background: #9d4edd;
+    }
+
+    /* ================= FLOW ================= */
+
+    .flow {
+      display: grid;
+
+      grid-template-columns:
+        repeat(auto-fit, minmax(200px, 1fr));
+
+      gap: 18px;
+    }
+
+    .flow-card {
+      padding: 25px;
+
+      background: #111116;
+
+      border: 1px solid #282831;
+
+      border-radius: 14px;
+    }
+
+    .flow-number {
+      width: 38px;
+      height: 38px;
+
+      display: flex;
+
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 10px;
+
+      background: #2b1640;
+
+      color: #c77dff;
+
+      font-weight: bold;
+
+      margin-bottom: 18px;
+    }
+
+    .flow-card h3 {
+      margin-bottom: 10px;
+    }
+
+    .flow-card p {
+      color: #888894;
+
+      font-size: 13px;
+
+      line-height: 1.7;
+    }
+
+    /* ================= CHECKOUT ================= */
+
+    .checkout-area {
+      max-width: 700px;
+
+      margin: auto;
+
+      padding: 30px;
+
+      background: #111116;
+
+      border: 1px solid #292932;
+
+      border-radius: 18px;
+    }
+
+    .selected-product {
+      padding: 15px;
+
+      background: #0c0c10;
+
+      border: 1px solid #292932;
+
+      border-radius: 10px;
+
+      margin-bottom: 22px;
+
+      color: #b8b8c2;
+
+      font-size: 14px;
+    }
+
+    label {
+      display: block;
+
+      margin-bottom: 8px;
+
+      color: #b6b6c0;
+
+      font-size: 13px;
+    }
+
+    input,
+    select {
+      width: 100%;
+
+      padding: 14px;
+
+      margin-bottom: 18px;
+
+      background: #0c0c10;
+
+      border: 1px solid #30303a;
+
+      border-radius: 9px;
+
+      color: white;
+
+      outline: none;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: #9d4edd;
+    }
+
+    /* ================= MODAL ================= */
+
+    .modal {
+      display: none;
+
+      position: fixed;
+
+      inset: 0;
+
+      background: rgba(0,0,0,0.75);
+
+      z-index: 2000;
+
+      align-items: center;
+
+      justify-content: center;
+
+      padding: 20px;
+    }
+
+    .modal-box {
+      width: 100%;
+
+      max-width: 480px;
+
+      background: #121217;
+
+      border: 1px solid #353540;
+
+      border-radius: 16px;
+
+      padding: 25px;
+
+      position: relative;
+    }
+
+    .close {
+      position: absolute;
+
+      right: 18px;
+      top: 12px;
+
+      font-size: 25px;
+
+      cursor: pointer;
+
+      color: #aaa;
+    }
+
+    .modal-box h2 {
+      margin-bottom: 15px;
+    }
+
+    .modal-box p {
+      color: #999;
+
+      line-height: 1.7;
+
+      margin-bottom: 20px;
+    }
+
+    /* ================= FOOTER ================= */
+
+    footer {
+      border-top: 1px solid #25252d;
+
+      padding: 40px 20px;
+
+      text-align: center;
+
+      color: #777783;
+
+      font-size: 13px;
+    }
+
+    footer strong {
+      color: #c77dff;
+    }
+
+    /* ================= MOBILE ================= */
+
+    @media(max-width: 700px) {
+
+      nav {
+        padding: 15px 5%;
+      }
+
+      .nav-links a {
+        display: none;
+      }
+
+      .hero {
+        min-height: 480px;
+
+        padding: 60px 7%;
+      }
+
+      .hero h1 {
+        font-size: 38px;
+      }
+
+      .section-head {
+        flex-direction: column;
+
+        align-items: flex-start;
+      }
+
+      .search-box,
+      .search-box input {
+        width: 100%;
+      }
+
+      .stats {
+        margin-top: -25px;
+      }
+
+      .stat {
+        border-right: none;
+
+        border-bottom: 1px solid #292932;
+      }
+
+      .stat:last-child {
+        border-bottom: none;
+      }
+    }
+
+  </style>
+</head>
+
+
+<body>
+
+  <!-- NAVBAR -->
+
+  <nav>
+
+    <div class="logo">
+      SANTANIC <span>STORE</span>
+    </div>
+
+    <div class="nav-links">
+      <a href="#home">Beranda</a>
+      <a href="#products">Produk</a>
+      <a href="#cara-order">Cara Order</a>
+      <a href="#checkout">Checkout</a>
+
+      <button class="cart-btn"
+        onclick="keCheckout()">
+        Pesanan (<span id="cartCount">0</span>)
+      </button>
+    </div>
+
+  </nav>
+
+
+
+  <!-- HERO / BANNER -->
+
+  <section class="hero" id="home">
+
+    <div class="hero-content">
+
+      <div class="hero-badge">
+        DIGITAL STORE • AMAN & MUDAH
+      </div>
+
+      <h1>
+        Temukan Produk Digital
+        <span>Favoritmu</span>
+      </h1>
+
+      <p>
+        Santanic Store menyediakan berbagai produk dan
+        layanan digital. Pilih produk yang tersedia,
+        lakukan checkout, dan ikuti proses pemesanan
+        melalui sistem kami.
+      </p>
+
+      <div class="hero-buttons">
+
+        <a href="#products"
+          class="btn-primary">
+          Lihat Produk
+        </a>
+
+        <a href="#cara-order"
+          class="btn-secondary">
+          Cara Order
+        </a>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- STATS -->
+
+  <section class="stats">
+
+    <div class="stats-box">
+
+      <div class="stat">
+        <h3>Digital</h3>
+        <p>Produk & Layanan</p>
+      </div>
+
+      <div class="stat">
+        <h3>24/7</h3>
+        <p>Sistem Pemesanan</p>
+      </div>
+
+      <div class="stat">
+        <h3>Fast</h3>
+        <p>Proses Pesanan</p>
+      </div>
+
+      <div class="stat">
+        <h3>Secure</h3>
+        <p>Data Pesanan</p>
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- PRODUCTS -->
+
+  <section class="container" id="products">
+
+    <div class="section-head">
+
+      <div>
+
+        <h2>Produk Pilihan</h2>
+
+        <p>
+          Pilih produk atau layanan yang sesuai
+          dengan kebutuhan kamu.
+        </p>
+
+      </div>
+
+
+      <div class="search-box">
+
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Cari produk..."
+          onkeyup="searchProduct()"
+        >
+
+      </div>
+
+    </div>
+
+
+
+    <div class="products" id="productList">
+
+
+      <!-- PRODUCT 1 -->
+
+      <div class="product-card"
+        data-name="Produk Digital Basic">
+
+        <div class="product-image">
+          DIGITAL
+        </div>
+
+        <div class="product-content">
+
+          <div class="product-tag">
+            DIGITAL PRODUCT
+          </div>
+
+          <h3>Produk Digital Basic</h3>
+
+          <p>
+            Produk digital dengan informasi dan
+            ketentuan yang tersedia pada saat checkout.
+          </p>
+
+          <div class="product-bottom">
+
+            <div class="price">
+              Rp5.000
+            </div>
+
+            <button
+              class="buy-btn"
+              onclick="pilihProduk(
+                'Produk Digital Basic',
+                'Rp5.000'
+              )">
+
+              Beli
+
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+
+      <!-- PRODUCT 2 -->
+
+      <div class="product-card"
+        data-name="Produk Digital Premium">
+
+        <div class="product-image">
+          PREMIUM
+        </div>
+
+        <div class="product-content">
+
+          <div class="product-tag">
+            POPULER
+          </div>
+
+          <h3>Produk Digital Premium</h3>
+
+          <p>
+            Pilihan produk digital dengan fitur
+            dan layanan sesuai deskripsi produk.
+          </p>
+
+          <div class="product-bottom">
+
+            <div class="price">
+              Rp10.000
+            </div>
+
+            <button
+              class="buy-btn"
+              onclick="pilihProduk(
+                'Produk Digital Premium',
+                'Rp10.000'
+              )">
+
+              Beli
+
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+
+      <!-- PRODUCT 3 -->
+
+      <div class="product-card"
+        data-name="Layanan Digital">
+
+        <div class="product-image">
+          SERVICE
+        </div>
+
+        <div class="product-content">
+
+          <div class="product-tag">
+            SERVICE
+          </div>
+
+          <h3>Layanan Digital</h3>
+
+          <p>
+            Layanan digital yang dapat dipesan
+            melalui sistem Santanic Store.
+          </p>
+
+          <div class="product-bottom">
+
+            <div class="price">
+              Mulai Rp10.000
+            </div>
+
+            <button
+              class="buy-btn"
+              onclick="pilihProduk(
+                'Layanan Digital',
+                'Mulai Rp10.000'
+              )">
+
+              Pesan
+
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+
+      <!-- PRODUCT 4 -->
+
+      <div class="product-card"
+        data-name="Produk Pilihan">
+
+        <div class="product-image">
+          SPECIAL
+        </div>
+
+        <div class="product-content">
+
+          <div class="product-tag">
+            SPECIAL
+          </div>
+
+          <h3>Produk Pilihan</h3>
+
+          <p>
+            Koleksi produk dan layanan lainnya
+            yang tersedia di Santanic Store.
+          </p>
+
+          <div class="product-bottom">
+
+            <div class="price">
+              Cek Detail
+            </div>
+
+            <button
+              class="buy-btn"
+              onclick="pilihProduk(
+                'Produk Pilihan',
+                'Hubungi Admin'
+              )">
+
+              Detail
+
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+    </div>
+
+  </section>
+
+
+
+  <!-- ORDER FLOW -->
+
+  <section class="container" id="cara-order">
+
+    <div class="section-head">
+
+      <div>
+
+        <h2>Bagaimana Cara Order?</h2>
+
+        <p>
+          Ikuti beberapa langkah sederhana
+          untuk melakukan pemesanan.
+        </p>
+
+      </div>
+
+    </div>
+
+
+
+    <div class="flow">
+
+      <div class="flow-card">
+
+        <div class="flow-number">
+          01
+        </div>
+
+        <h3>Pilih Produk</h3>
+
+        <p>
+          Pilih produk atau layanan yang
+          tersedia di Santanic Store.
+        </p>
+
+      </div>
+
+
+
+      <div class="flow-card">
+
+        <div class="flow-number">
+          02
+        </div>
+
+        <h3>Isi Data</h3>
+
+        <p>
+          Masukkan data yang diperlukan
+          untuk membuat pesanan.
+        </p>
+
+      </div>
+
+
+
+      <div class="flow-card">
+
+        <div class="flow-number">
+          03
+        </div>
+
+        <h3>Pembayaran</h3>
+
+        <p>
+          Lanjutkan ke metode pembayaran
+          yang tersedia pada checkout.
+        </p>
+
+      </div>
+
+
+
+      <div class="flow-card">
+
+        <div class="flow-number">
+          04
+        </div>
+
+        <h3>Pesanan Diproses</h3>
+
+        <p>
+          Pesanan akan diproses sesuai
+          sistem dan ketentuan layanan.
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- CHECKOUT -->
+
+  <section class="container" id="checkout">
+
+    <div class="section-head">
+
+      <div>
+
+        <h2>Checkout Pesanan</h2>
+
+        <p>
+          Lengkapi informasi pesanan untuk
+          melanjutkan proses checkout.
+        </p>
+
+      </div>
+
+    </div>
+
+
+
+    <div class="checkout-area">
+
+
+      <div class="selected-product">
+
+        Produk dipilih:
+
+        <strong id="selectedProduct">
+          Belum ada produk yang dipilih
+        </strong>
+
+        <br>
+
+        Harga:
+
+        <strong id="selectedPrice">
+          -
+        </strong>
+
+      </div>
+
+
+
+      <form id="checkoutForm">
+
+
+        <label>Nama</label>
+
+        <input
+          type="text"
+          id="customerName"
+          placeholder="Masukkan nama"
+          required
+        >
+
+
+
+        <label>Kontak</label>
+
+        <input
+          type="text"
+          id="customerContact"
+          placeholder="Email atau nomor yang dapat dihubungi"
+          required
+        >
+
+
+
+        <label>Produk</label>
+
+        <input
+          type="text"
+          id="productInput"
+          placeholder="Pilih produk terlebih dahulu"
+          required
+        >
+
+
+
+        <button
+          type="submit"
+          class="btn-primary"
+          style="width:100%;"
+        >
+
+          Lanjutkan Checkout
+
+        </button>
+
+
+      </form>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- MODAL -->
+
+  <div class="modal" id="modal">
+
+    <div class="modal-box">
+
+      <span
+        class="close"
+        onclick="closeModal()"
+      >
+        ×
+      </span>
+
+
+      <h2>Pesanan Dibuat</h2>
+
+      <p id="modalText">
+      </p>
+
+
+      <button
+        class="btn-primary"
+        onclick="closeModal()"
+      >
+        Tutup
+      </button>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- FOOTER -->
+
+  <footer>
+
+    <p>
+      © 2026
+      <strong>SANTANIC STORE</strong>
+    </p>
+
+    <br>
+
+    <p>
+      Digital Products & Services
+    </p>
+
+  </footer>
+
+
+
+  <!-- JAVASCRIPT -->
+
+  <script>
+
+    let cart = 0;
+
+
+    function pilihProduk(nama, harga) {
+
+      document.getElementById(
+        "selectedProduct"
+      ).innerText = nama;
+
+
+      document.getElementById(
+        "selectedPrice"
+      ).innerText = harga;
+
+
+      document.getElementById(
+        "productInput"
+      ).value = nama;
+
+
+      cart = 1;
+
+
+      document.getElementById(
+        "cartCount"
+      ).innerText = cart;
+
+
+      document.getElementById(
+        "checkout"
+      ).scrollIntoView({
+        behavior: "smooth"
+      });
+
+    }
+
+
+
+    function keCheckout() {
+
+      document.getElementById(
+        "checkout"
+      ).scrollIntoView({
+        behavior: "smooth"
+      });
+
+    }
+
+
+
+    function searchProduct() {
+
+      let input =
+        document.getElementById(
+          "searchInput"
+        ).value.toLowerCase();
+
+
+      let products =
+        document.querySelectorAll(
+          ".product-card"
+        );
+
+
+      products.forEach(function(product) {
+
+        let name =
+          product.getAttribute(
+            "data-name"
+          ).toLowerCase();
+
+
+        if (
+          name.includes(input)
+        ) {
+
+          product.style.display =
+            "block";
+
+        }
+
+        else {
+
+          product.style.display =
+            "none";
+
+        }
+
+      });
+
+    }
+
+
+
+    document.getElementById(
+      "checkoutForm"
+    ).addEventListener(
+      "submit",
+      function(e) {
+
+        e.preventDefault();
+
+
+        let nama =
+          document.getElementById(
+            "customerName"
+          ).value;
+
+
+        let produk =
+          document.getElementById(
+            "productInput"
+          ).value;
+
+
+        document.getElementById(
+          "modalText"
+        ).innerHTML =
+
+          "Halo <b>" + nama + "</b>.<br><br>" +
+
+          "Pesanan untuk <b>" +
+          produk +
+          "</b> telah dibuat.<br><br>" +
+
+          "Silakan lanjutkan ke metode pembayaran yang tersedia sesuai alur checkout Santanic Store.";
+
+
+        document.getElementById(
+          "modal"
+        ).style.display =
+          "flex";
+
+      }
+    );
+
+
+
+    function closeModal() {
+
+      document.getElementById(
+        "modal"
+      ).style.display =
+        "none";
+
+    }
+
+  </script>
+
+
+</body>
+                                         </html>
