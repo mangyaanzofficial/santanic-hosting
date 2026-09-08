@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Katalog Produk — SantanicStore</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0B0F14; --bg-raise:#0F151C; --panel:#121821; --panel-hi:#161E29;
+    --line:#212B38; --line-soft:#1A222D; --text:#E7ECF2; --text-dim:#8A97A8;
+    --text-faint:#5C6779; --amber:#F2A93B; --amber-dim:#9C7433; --teal:#4FD1C5; --red:#E8635C;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; line-height:1.6; -webkit-font-smoothing:antialiased; overflow-x:hidden;}
+  h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif; font-weight:600; letter-spacing:-0.01em; color:var(--text);}
+  a{color:inherit; text-decoration:none;}
+  button{font-family:inherit; cursor:pointer; border:none; background:none; color:inherit;}
+  .wrap{max-width:1120px; margin:0 auto; padding:0 22px;}
+  ::selection{background:var(--amber); color:#0B0F14;}
+  :focus-visible{outline:2px solid var(--teal); outline-offset:2px;}
+
+  header{position:sticky; top:0; z-index:60; background:rgba(11,15,20,.92); backdrop-filter:blur(12px); border-bottom:1px solid var(--line-soft);}
+  .nav{display:flex; align-items:center; justify-content:space-between; height:60px;}
+  .brand{display:flex; align-items:center; gap:10px; font-family:'Space Grotesk'; font-weight:700; font-size:17px;}
+  .brand .mark{width:32px; height:32px; border-radius:8px; background:linear-gradient(135deg,var(--amber),#d98a2a); display:flex; align-items:center; justify-content:center; color:#0B0F14; font-weight:700; font-size:15px;}
+  .back-link{display:flex; align-items:center; gap:6px; font-size:13px; color:var(--text-dim); transition:color .15s ease;}
+  .back-link:hover{color:var(--text);}
+  .navactions{display:flex; align-items:center; gap:10px;}
+  .btn{display:inline-flex; align-items:center; gap:8px; padding:11px 20px; border-radius:7px; font-size:14px; font-weight:600; transition:all .15s ease;}
+  .btn:active{transform:scale(.96);}
+  .btn-amber{background:var(--amber); color:#0B0F14;}
+  .btn-amber:hover{background:#ffc659;}
+  .btn-outline{border:1.5px solid var(--line); color:var(--text-dim);}
+  .btn-outline:hover{border-color:var(--text); background:rgba(255,255,255,.03);}
+  .cart-btn{position:relative; padding:11px; border:1.5px solid var(--line); border-radius:6px; display:flex; align-items:center; justify-content:center; width:40px; height:40px; transition:all .15s ease;}
+  .cart-btn:hover{border-color:var(--text); background:rgba(255,255,255,.03);}
+  .cart-count{position:absolute; top:-8px; right:-8px; background:var(--red); color:#fff; font-size:10px; font-weight:700; width:20px; height:20px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-family:'JetBrains Mono';}
+
+  .page-head{padding:40px 0 28px; border-bottom:1px solid var(--line-soft);}
+  .eyebrow{font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--teal); letter-spacing:.05em; margin-bottom:14px; display:flex; align-items:center; gap:8px; text-transform:uppercase;}
+  .eyebrow::before{content:''; width:14px; height:1px; background:var(--teal);}
+  .page-head h1{font-size:clamp(28px,3.6vw,38px); margin-bottom:12px; font-weight:700;}
+  .page-head p{color:var(--text-dim); font-size:15px; max-width:65ch; line-height:1.65;}
+
+  main{padding:40px 0 80px;}
+  .cat-tabs{display:flex; gap:8px; overflow-x:auto; padding-bottom:8px; margin-bottom:32px; scrollbar-width:none;}
+  .cat-tabs::-webkit-scrollbar{display:none;}
+  .cat-tab{flex:0 0 auto; padding:9px 16px; border:1px solid var(--line); border-radius:6px; font-size:13px; color:var(--text-dim); white-space:nowrap; transition:all .15s ease;}
+  .cat-tab.active{background:var(--amber); color:#0B0F14; border-color:var(--amber); font-weight:600;}
+  .cat-tab:not(.active):hover{border-color:var(--text-faint); color:var(--text);}
+
+  .pgrid{display:grid; grid-template-columns:1fr; gap:16px;}
+  @media(min-width:640px){ .pgrid{grid-template-columns:repeat(2,1fr);} }
+  @media(min-width:980px){ .pgrid{grid-template-columns:repeat(3,1fr);} }
+
+  .pcard{border:1px solid var(--line); border-radius:10px; background:var(--panel); padding:22px; display:flex; flex-direction:column; position:relative; transition:all .2s ease;}
+  .pcard:hover{border-color:var(--teal); background:var(--panel-hi);}
+  .pcard .flag{position:absolute; top:14px; right:14px; font-size:10.5px; font-family:'JetBrains Mono'; color:var(--amber); border:1px solid var(--amber-dim); padding:3px 9px; border-radius:4px; text-transform:uppercase; letter-spacing:.05em;}
+  .pcard .cat-label{font-family:'JetBrains Mono'; font-size:11px; color:var(--teal); margin-bottom:10px; text-transform:uppercase; letter-spacing:.05em;}
+  .pcard h3{font-size:16px; margin-bottom:8px; padding-right:70px; font-weight:600;}
+  .pcard .specs{list-style:none; margin:0 0 16px; font-size:13px; color:var(--text-dim); flex:1;}
+  .pcard .specs li{padding-left:16px; position:relative; margin-bottom:6px;}
+  .pcard .specs li::before{content:'—'; position:absolute; left:0; color:var(--text-faint);}
+  .pcard .pricebar{display:flex; align-items:center; justify-content:space-between; margin-top:auto; padding-top:14px; border-top:1px solid var(--line-soft);}
+  .pcard .price{font-family:'JetBrains Mono'; font-size:16px; color:var(--amber); font-weight:700;}
+  .pcard .addbtn{padding:8px 14px; border:1px solid var(--line); border-radius:6px; font-size:12.5px; font-weight:600; transition:all .15s ease;}
+  .pcard .addbtn:hover{background:var(--amber); border-color:var(--amber); color:#0B0F14;}
+  .pcard .addbtn.added{background:var(--teal); border-color:var(--teal); color:#0B0F14;}
+
+  .pay-primary{width:100%; justify-content:center; padding:14px; font-size:14px; background:linear-gradient(135deg,var(--amber),#e0912a); color:#0B0F14; font-weight:600;}
+  .pay-primary:hover{background:linear-gradient(135deg,#ffc659,#f0a035);}
+  .pay-primary small{display:block; font-family:'JetBrains Mono'; font-size:10px; font-weight:500; opacity:.75; margin-top:3px;}
+  .pay-secondary{width:100%; justify-content:center; padding:10px; font-size:13px; margin-top:8px; border:1.5px solid var(--line); color:var(--text-dim);}
+  .pay-secondary:hover{color:var(--text); border-color:var(--text-faint);}
+  .pay-badge{display:flex; align-items:center; justify-content:center; gap:6px; margin-top:12px; font-family:'JetBrains Mono'; font-size:10px; color:var(--text-faint);}
+
+  .success-banner{position:fixed; top:0; left:0; right:0; z-index:110; background:var(--teal); color:#06201d; padding:14px 20px; display:none; align-items:center; justify-content:center; gap:10px; font-size:13.5px; font-weight:600; text-align:center;}
+  .success-banner.show{display:flex;}
+  .success-banner button{color:#06201d; font-weight:700; margin-left:6px; text-decoration:underline;}
+
+  .overlay{position:fixed; inset:0; background:rgba(5,7,10,.65); z-index:90; opacity:0; pointer-events:none; transition:opacity .25s ease;}
+  .overlay.show{opacity:1; pointer-events:auto;}
+  .drawer{position:fixed; top:0; right:0; height:100%; width:min(420px,100%); background:var(--bg); border-left:1px solid var(--line); z-index:95; transform:translateX(100%); transition:transform .28s ease; display:flex; flex-direction:column;}
+  .drawer.show{transform:translateX(0);}
+  .drawer-head{display:flex; align-items:center; justify-content:space-between; padding:20px; border-bottom:1px solid var(--line-soft);}
+  .drawer-head h3{font-size:16px; font-weight:600;}
+  .drawer-close{width:36px; height:36px; border:1px solid var(--line); border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:16px; transition:all .15s ease;}
+  .drawer-close:hover{border-color:var(--text); background:rgba(255,255,255,.03);}
+  .drawer-items{flex:1; overflow-y:auto; padding:14px 20px;}
+  .cart-empty{color:var(--text-faint); font-size:14px; padding:40px 0; text-align:center;}
+  .cart-row{display:flex; gap:12px; padding:14px 0; border-bottom:1px solid var(--line-soft);}
+  .cart-row .ci-info{flex:1;}
+  .cart-row .ci-info h5{font-size:14px; margin-bottom:4px; font-weight:600;}
+  .cart-row .ci-info .ci-price{font-family:'JetBrains Mono'; font-size:12px; color:var(--amber); font-weight:600;}
+  .qty{display:flex; align-items:center; gap:8px; margin-top:8px;}
+  .qty button{width:24px; height:24px; border:1px solid var(--line); border-radius:4px; font-size:12px; line-height:1; transition:all .15s ease;}
+  .qty button:hover{border-color:var(--text); background:rgba(255,255,255,.03);}
+  .qty span{font-family:'JetBrains Mono'; font-size:12px; min-width:18px; text-align:center;}
+  .ci-remove{font-size:12px; color:var(--text-faint); margin-left:auto; cursor:pointer; transition:color .15s ease;}
+  .ci-remove:hover{color:var(--red);}
+  .drawer-foot{padding:20px; border-top:1px solid var(--line-soft);}
+  .totalrow{display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; font-size:15px;}
+  .totalrow b{font-family:'JetBrains Mono'; color:var(--amber); font-size:18px; font-weight:700;}
+
+  .toast{position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px); z-index:120; background:var(--teal); color:#06201d; font-weight:600; font-size:13px; padding:12px 20px; border-radius:6px; opacity:0; transition:all .25s ease; pointer-events:none;}
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+
+  footer{border-top:1px solid var(--line-soft); padding:28px 0; background:var(--bg-raise); text-align:center; font-size:12px; color:var(--text-faint);}
+
+  /* ---------- scroll progress ---------- */
+  .scrollbar{position:fixed; top:0; left:0; height:2px; width:0%; background:linear-gradient(90deg,var(--teal),var(--amber)); z-index:200; transition:width .1s linear;}
+
+  /* ---------- boot / preloader ---------- */
+  .boot{position:fixed; inset:0; z-index:300; background:#080B0F; display:flex; align-items:center; justify-content:center; transition:opacity .4s ease, visibility .4s ease;}
+  .boot.hide{opacity:0; visibility:hidden; pointer-events:none;}
+  .boot-box{width:min(380px,86vw); font-family:'JetBrains Mono',monospace; font-size:12.5px;}
+  .boot-top{display:flex; align-items:center; gap:8px; margin-bottom:14px; color:var(--text-faint);}
+  .boot-top .bdot{width:8px; height:8px; border-radius:50%; background:var(--line);}
+  .boot-top .bdot:nth-child(1){background:#E8635C;} .boot-top .bdot:nth-child(2){background:#F2A93B;} .boot-top .bdot:nth-child(3){background:#4FD1C5;}
+  .boot-lines{min-height:60px;}
+  .boot-line{opacity:0; color:var(--text-dim); margin-bottom:7px; display:flex; gap:8px;}
+  .boot-line.show{opacity:1;}
+  .boot-line .ok{color:var(--teal); margin-left:auto;}
+  .boot-line .prompt{color:var(--amber-dim);}
+  .boot-bar-track{margin-top:16px; height:2px; background:var(--line-soft); border-radius:2px; overflow:hidden;}
+  .boot-bar-fill{height:100%; width:0%; background:linear-gradient(90deg,var(--teal),var(--amber)); transition:width .2s ease;}
+  @media(prefers-reduced-motion:reduce){ .boot{display:none;} }
+
+  .pcard.reveal{opacity:0; transform:translateY(14px); animation:pcardin .5s ease-out forwards;}
+  @keyframes pcardin{to{opacity:1; transform:translateY(0);}}
+</style>
+</head>
+<body>
+
+<div class="boot" id="boot">
+  <div class="boot-box">
+    <div class="boot-top"><span class="bdot"></span><span class="bdot"></span><span class="bdot"></span><span>santanicstore@katalog:~</span></div>
+    <div class="boot-lines" id="bootLines"></div>
+    <div class="boot-bar-track"><div class="boot-bar-fill" id="bootFill"></div></div>
+  </div>
+</div>
+
+<div class="scrollbar" id="scrollbar"></div>
+
+<div class="success-banner" id="successBanner">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;">
+    <polyline points="20 6 9 17 4 12"></polyline>
+  </svg>
+  <span id="successText">Pembayaran berhasil!</span>
+  <button onclick="document.getElementById('successBanner').classList.remove('show')">Tutup</button>
+</div>
+
+<header>
+  <div class="wrap nav">
+    <div class="brand"><span class="mark">S</span>Santanic Store</div>
+    <a class="back-link" href="index.html">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Kembali
+    </a>
+    <div class="navactions">
+      <button class="cart-btn" id="cartOpenBtn" aria-label="Buka keranjang">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+        </svg>
+        <span class="cart-count" id="cartCount">0</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="page-head">
+  <div class="wrap">
+    <div class="eyebrow">Katalog Produk</div>
+    <h1>Pilih layanan sesuai kebutuhanmu</h1>
+    <p>Semua harga sudah termasuk pengerjaan otomatis. Tambahkan ke keranjang, lalu bayar langsung via QRIS/VA otomatis.</p>
+  </div>
+</div>
+
+<main>
+  <div class="wrap">
+    <div class="cat-tabs" id="catTabs"></div>
+    <div class="pgrid" id="productGrid"></div>
+  </div>
+</main>
+
+<div class="overlay" id="overlay"></div>
+<div class="drawer" id="cartDrawer">
+  <div class="drawer-head">
+    <h3>Keranjang Anda</h3>
+    <button class="drawer-close" id="drawerCloseBtn" aria-label="Tutup keranjang">✕</button>
+  </div>
+  <div class="drawer-items" id="cartItems">
+    <p class="cart-empty">Keranjang masih kosong.</p>
+  </div>
+  <div class="drawer-foot">
+    <div class="totalrow"><span>Total:</span><b id="cartTotal">Rp 0</b></div>
+    <button class="btn pay-primary" id="payBtn" onclick="payWithSakurupiah()">Bayar Sekarang<small>via QRIS / Virtual Account</small></button>
+    <button class="btn pay-secondary" onclick="checkoutWA()">Chat Konsultasi</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<footer>
+  <p>© 2026 Santanic Store. Semua hak cipta dilindungi.</p>
+</footer>
+
+<script>
+const PANEL_TERMS = ["Garansi 10 hari (1x replace)", "Server anti delay/lemot", "Claim garansi wajib bawa bukti transaksi"];
+
+const catPanel = [
+  {id:"pnl-1gb", name:"Panel Pterodactyl 1GB", cat:"Panel", price:1000, unit:"/bulan", specs:["RAM 1GB", "Full akses setelah verifikasi pembayaran", ...PANEL_TERMS]},
+  {id:"pnl-2gb", name:"Panel Pterodactyl 2GB", cat:"Panel", price:2000, unit:"/bulan", specs:["RAM 2GB", "Full akses setelah verifikasi pembayaran", ...PANEL_TERMS]},
+  {id:"pnl-3gb", name:"Panel Pterodactyl 3GB", cat:"Panel", price:3000, unit:"/bulan", specs:["RAM 3GB", "Full akses setelah verifikasi pembayaran", ...PANEL_TERMS]},
+  {id:"pnl-4gb", name:"Panel Pterodactyl 4GB", cat:"Panel", price:4000, unit:"/bulan", specs:["RAM 4GB", "Full akses setelah verifikasi pembayaran", ...PANEL_TERMS]},
+  {id:"pnl-5gb", name:"Panel Pterodactyl 5GB", cat:"Panel", price:5000, unit:"/bulan", specs:["RAM 5GB", "Full akses setelah verifikasi pembayaran", ...PANEL_TERMS]},
+  {id:"pnl-6gb", name:"Panel Pterodactyl 6GB", cat:"Panel", price:6000, unit:"/bulan", specs:["RAM 6GB", "Full akses setelah verifikasi pembayaran", ...PANEL_TERMS]},
+  {id:"pnl-7gb", name:"Panel Pterodactyl 7GB", cat:"Panel", price:7000, unit:"/bulan", specs:["RAM 7GB", "Full akses setelah verifikasi pembayaran", ...PANEL_TERMS]},
+  {id:"pnl-8gb", name:"Panel Pterodactyl 8GB", cat:"Panel", price:8000, unit:"/bulan", specs:["RAM 8GB", "Full akses setelah verifikasi pembayaran", ...PANEL_TERMS]},
+  {id:"pnl-9gb", name:"Panel Pterodactyl 9GB", cat:"Panel", price:9000, unit:"/bulan", specs:["RAM 9GB", "Full akses setelah verifikasi pembayaran", ...PANEL_TERMS]},
+  {id:"pnl-unli", name:"Panel Pterodactyl UNLI", cat:"Panel", price:10000, unit:"/bulan", specs:["RAM Unlimited", "Free UBot", "Full akses setelah verifikasi pembayaran", ...PANEL_TERMS], flag:"FREE UBOT"},
+  {id:"vps-16c8", name:"VPS RAM 16 C8", cat:"Spek VPS", price:0, specs:["RAM 16GB / 8 Core", "No delay, full power", "Server terjaga", "Pakai protect jadi aman", "Online 24 jam"]}
+];
+
+const catRename = [
+  {id:"rn-script", name:"Jasa Rename Script", cat:"Jasa Rename", price:10000, unit:"/rename", specs:["Rename identitas script sesuai brand kamu", "Pengerjaan cepat"]}
+];
+
+const catJoin = [
+  {id:"jn-reseller", name:"Reseller Panel", cat:"Open Join", price:5000, specs:["BENEFIT RESELLER PANEL:", "Bisa create panel", "Bisa jual panel", "Bisa buka jasa bot", "Bisa open sewa bot pushkontak", "Bisa bikin panel sepuasnya (asal dipakai)", "Mokad no PT-PT yee"]},
+  {id:"jn-adp", name:"ADP", cat:"Open Join", price:15000, specs:["BENEFIT ADMIN PANEL:", "Bisa jual panel", "Bisa sewa bot push", "Bisa open reseller", "Admin di GB Reseller", "Mokad no PT-PT yee"]},
+  {id:"jn-own", name:"OWN", cat:"Open Join", price:25000, specs:["BENEFIT OWN PANEL:", "Bisa open ADP", "Bisa open reseller", "Bisa addseller sendiri", "Admin di GB reseller", "Mokad no PT-PT yee"]},
+  {id:"jn-ptbiasa", name:"PT Biasa", cat:"Open Join", price:35000, specs:["BENEFIT PT PANEL:", "Bisa open reseller", "Bisa open ADP", "Bisa open OWN", "Admin GB reseller", "Bisa addseller sendiri", "Balmod kalo niat + usaha", "Mokad no PT-PT yee"]},
+  {id:"jn-ptkiri", name:"Join PT Kiri", cat:"Open Join", price:45000, specs:["BENEFIT PT KIRI PANEL:", "Bisa open reseller", "Bisa open ADP", "Bisa open PT biasa panel", "Bisa open OWN panel", "Jadi admin GC", "Bisa bikin panel sepuasnya (asal dipakai)", "Mokad no PT-PT yee"]},
+  {id:"jn-ptkanan", name:"Join PT Kanan", cat:"Open Join", price:55000, specs:["BENEFIT PT KANAN PANEL:", "Bisa open reseller", "Bisa open ADP", "Bisa open OWN panel", "Bisa open PT biasa panel", "Bisa open PT kiri panel", "Jadi admin di GB reseller", "Bisa bikin panel sepuasnya asal jeda + dipakai", "Mokad no PT-PT yee"]},
+  {id:"jn-ptprib", name:"Join PT Prib + Digaji", cat:"Open Join", price:70000, specs:["BENEFIT PT PRIBADI:", "Makin deket sama owner", "Bisa sewa bot pushkontak", "Bisa open reseller", "Bisa open ADP", "Bisa open OWN", "Bisa open PT/kanan/kiri (jangan open PT prib lagi, gabisa)", "Boleh open up di GB reseller", "Admin di GC storan", "Digaji", "Mokad no PT-PT"], flag:"DIGAJI"}
+];
+
+const JOIN_NOTE = [
+  "Yang join Reseller wajib dimasukkan ke GB Reseller — digabung ke grup, jangan open sendiri.",
+  "Yang join Reseller / ADP / OWN / PT / Kanan / Kiri diusahakan wajib masuk GB Storan juga.",
+  "Semua pasti balmod asal ada niat dan usaha — jangan menyerah!"
+];
+
+
+const catScriptBot = [
+  {id:"sb-killua", name:"Cpanel Killua Full Button", cat:"Script Bot Tele/WA", price:25000, specs:["Script bot Telegram/WhatsApp", "Tampilan full button"]},
+  {id:"sb-autoorder", name:"Auto Order", cat:"Script Bot Tele/WA", price:50000, specs:["Sistem order otomatis", "Terintegrasi dengan bot"]},
+  {id:"sb-apk", name:"Script Build APK", cat:"Script Bot Tele/WA", price:35000, specs:["Script untuk build APK", "Siap dipakai ulang"]}
+];
+
+const catJasaWeb = [
+  {id:"web-premium", name:"Desain Premium", cat:"Jasa Pembuatan Web", price:50000, unit:"/web", specs:["Desain website premium", "Sesuai kebutuhan kamu"]}
+];
+
+const catUbot = [
+  {id:"ubot-premium", name:"UBot Premium", cat:"UBot Telegram", price:15000, unit:"/30 hari", specs:["Masa aktif 30 hari"]},
+  {id:"ubot-reseller", name:"UBot Reseller", cat:"UBot Telegram", price:35000, unit:"/perma", specs:["Akses reseller permanen"], flag:"PERMA"},
+  {id:"ubot-partner", name:"UBot Partner", cat:"UBot Telegram", price:40000, unit:"/perma", specs:["Akses partner permanen"], flag:"PERMA"}
+];
+
+const catLosAngeles = [
+  {id:"la-script", name:"Script Los Angeles", cat:"Script LA Santanic", price:15000, specs:["Script dasar Los Angeles Santanic"]},
+  {id:"la-update", name:"Full Update", cat:"Script LA Santanic", price:10000, specs:["Update penuh ke versi terbaru"]},
+  {id:"la-reseller", name:"Reseller", cat:"Script LA Santanic", price:25000, specs:["Akses level Reseller"]},
+  {id:"la-partner", name:"Partner", cat:"Script LA Santanic", price:40000, specs:["Akses level Partner"]},
+  {id:"la-moderator", name:"Moderator", cat:"Script LA Santanic", price:55000, specs:["Akses level Moderator"]},
+  {id:"la-ceo", name:"CEO", cat:"Script LA Santanic", price:70000, specs:["Akses level CEO"]},
+  {id:"la-owner", name:"Owner", cat:"Script LA Santanic", price:85000, specs:["Akses level Owner"]},
+  {id:"la-staf", name:"Staf + Admin", cat:"Script LA Santanic", price:100000, specs:["Akses level Staf sekaligus Admin"], flag:"TOP"}
+];
+
+const catAplikasi = [
+  {id:"app-1hari", name:"Aplikasi Santanic — 1 Hari", cat:"Aplikasi Santanic", price:3000, unit:"/1 hari", specs:["Akses aplikasi 1 hari"]},
+  {id:"app-7hari", name:"Aplikasi Santanic — 7 Hari", cat:"Aplikasi Santanic", price:6000, unit:"/7 hari", specs:["Akses aplikasi 7 hari"]},
+  {id:"app-30hari", name:"Aplikasi Santanic — 30 Hari", cat:"Aplikasi Santanic", price:10000, unit:"/30 hari", specs:["Akses aplikasi 30 hari"], flag:"HEMAT"},
+  {id:"app-member", name:"Role App: Member", cat:"Aplikasi Santanic", price:15000, specs:["Role Member di aplikasi"]},
+  {id:"app-reseller", name:"Role App: Reseller", cat:"Aplikasi Santanic", price:20000, specs:["Role Reseller di aplikasi"]},
+  {id:"app-admin", name:"Role App: Admin", cat:"Aplikasi Santanic", price:35000, specs:["Role Admin di aplikasi"]},
+  {id:"app-owner", name:"Role App: Owner", cat:"Aplikasi Santanic", price:70000, specs:["Role Owner di aplikasi"], flag:"TOP"}
+];
+
+const products = {
+  "semua": [...catPanel, ...catRename, ...catJoin, ...catScriptBot, ...catJasaWeb, ...catUbot, ...catLosAngeles, ...catAplikasi],
+  "panel": catPanel,
+  "rename": catRename,
+  "join": catJoin,
+  "scriptbot": catScriptBot,
+  "jasaweb": catJasaWeb,
+  "ubot": catUbot,
+  "losangeles": catLosAngeles,
+  "aplikasi": catAplikasi
+};
+
+let cart = [];
+let selectedCat = "semua";
+
+function formatRp(val){
+  return new Intl.NumberFormat("id-ID", {style:"currency", currency:"IDR", maximumFractionDigits:0}).format(val);
+}
+
+function renderTabs(){
+  const tabs = document.getElementById("catTabs");
+  const cats = Object.keys(products);
+  const catLabels = {
+    semua:"Semua Produk",
+    panel:"Panel Pterodactyl",
+    rename:"Jasa Rename Script",
+    join:"Open Join ADP/OWN/PT",
+    scriptbot:"Script Bot Tele/WA",
+    jasaweb:"Jasa Pembuatan Web",
+    ubot:"UBot Telegram",
+    losangeles:"Script LA Santanic",
+    aplikasi:"Aplikasi Santanic"
+  };
+  tabs.innerHTML = cats.map((cat, i)=>`
+    <button class="cat-tab ${i===0?'active':''}" data-cat="${cat}">${catLabels[cat] || cat.charAt(0).toUpperCase() + cat.slice(1)}</button>
+  `).join("");
+  tabs.querySelectorAll(".cat-tab").forEach(btn=>{
+    btn.onclick = ()=>{
+      tabs.querySelectorAll(".cat-tab").forEach(b=>b.classList.remove("active"));
+      btn.classList.add("active");
+      selectedCat = btn.dataset.cat;
+      renderProducts();
+    };
+  });
+}
+
+const catNotes = {
+  join: JOIN_NOTE,
+  semua: JOIN_NOTE
+};
+
+function renderProducts(){
+  const grid = document.getElementById("productGrid");
+  const prods = products[selectedCat] || [];
+  const note = catNotes[selectedCat];
+  grid.innerHTML = "";
+  if(note){
+    const noteEl = document.createElement("div");
+    noteEl.style.cssText = "grid-column:1/-1; border:1px solid var(--amber-dim); background:linear-gradient(135deg,rgba(242,169,59,.09),rgba(242,169,59,.03)); border-radius:10px; padding:18px 20px; margin-bottom:6px;";
+    noteEl.innerHTML = `
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--amber); flex-shrink:0;">
+          <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+        <b style="color:var(--amber); font-family:'Space Grotesk'; font-size:14px; font-weight:600;">Penting, Wajib Dibaca</b>
+      </div>
+      <ul style="list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px;">
+        ${note.map(point=>`
+          <li style="display:flex; gap:10px; font-size:13px; color:var(--text-dim); line-height:1.6;">
+            <span style="flex-shrink:0; color:var(--amber); margin-top:1px;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </span>
+            <span>${point}</span>
+          </li>
+        `).join("")}
+      </ul>
+    `;
+    grid.appendChild(noteEl);
+  }
+  prods.forEach((p, i)=>{
+    const id = p.id;
+    const card = document.createElement("div");
+    card.className = "pcard reveal";
+    card.style.animationDelay = (i*0.06) + "s";
+    card.innerHTML = `
+      ${p.flag ? `<span class="flag">${p.flag}</span>` : ""}
+      <div class="cat-label">${p.cat}</div>
+      <h3>${p.name}</h3>
+      <ul class="specs">${p.specs.map(s=>`<li>${s}</li>`).join("")}</ul>
+      <div class="pricebar">
+        <span class="price">${p.price>0 ? formatRp(p.price)+(p.unit?`<small style="font-size:11px;color:var(--text-faint);font-weight:500;"> ${p.unit}</small>`:"") : "Hubungi Admin"}</span>
+        <button class="addbtn" data-id="${id}">${p.price>0 ? "+ Keranjang" : "Chat Admin"}</button>
+      </div>
+    `;
+    grid.appendChild(card);
+    card.querySelector(".addbtn").onclick = (e)=>{
+      if(p.price>0){
+        addToCart(id, p.name, p.price);
+        e.target.textContent = "✓ Ditambahkan";
+        e.target.classList.add("added");
+        setTimeout(()=>{ e.target.textContent="+ Keranjang"; e.target.classList.remove("added"); }, 1200);
+      } else {
+        const msg = `Halo, saya mau tanya-tanya soal ${p.name}.`;
+        window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, "_blank");
+      }
+    };
+  });
+}
+
+function addToCart(id, name, price){
+  const existing = cart.find(c=>c.id===id);
+  if(existing){ existing.qty++; } else{ cart.push({id, name, price, qty:1}); }
+  renderCart();
+  showToast("Ditambahkan ke keranjang.");
+}
+
+function changeQty(id, delta){
+  const item = cart.find(c=>c.id===id);
+  if(!item) return;
+  item.qty += delta;
+  if(item.qty<=0){ cart = cart.filter(c=>c.id!==id); }
+  renderCart();
+}
+
+function removeItem(id){ cart = cart.filter(c=>c.id!==id); renderCart(); }
+
+function cartTotal(){ return cart.reduce((sum,c)=>sum + c.price*c.qty, 0); }
+
+function renderCart(){
+  const wrap = document.getElementById("cartItems");
+  const countEl = document.getElementById("cartCount");
+  const totalEl = document.getElementById("cartTotal");
+  const totalQty = cart.reduce((s,c)=>s+c.qty,0);
+  countEl.textContent = totalQty;
+  totalEl.textContent = formatRp(cartTotal());
+  if(cart.length===0){ wrap.innerHTML = `<p class="cart-empty">Keranjang masih kosong.</p>`; return; }
+  wrap.innerHTML = cart.map(c=>`
+    <div class="cart-row">
+      <div class="ci-info">
+        <h5>${c.name}</h5>
+        <div class="ci-price">${formatRp(c.price)}</div>
+        <div class="qty">
+          <button onclick="changeQty('${c.id}',-1)">−</button>
+          <span>${c.qty}</span>
+          <button onclick="changeQty('${c.id}',1)">+</button>
+          <button class="ci-remove" onclick="removeItem('${c.id}')">Hapus</button>
+        </div>
+      </div>
+    </div>
+  `).join("");
+}
+
+/* ============================================================
+   KONFIGURASI SAKURUPIAH PAYMENT GATEWAY
+   Isi API_KEY, MERCHANT_CODE, dan sesuaikan endpoint/nama field
+   di bawah sesuai dokumentasi API Sakurupiah yang kamu punya.
+   ============================================================ */
+const SAKURUPIAH_CONFIG = {
+  API_KEY: "5UIVIOI7oeHtn8ROR75w9ua1S6Xow",       // <-- API key kamu dari dashboard Sakurupiah
+  MERCHANT_CODE: "298443078",       // <-- Kode merchant/toko kamu di Sakurupiah
+  API_BASE_URL: "https://sakurupiah.id/api/",    // <-- Sesuaikan dengan base URL resmi dari dokumentasi mereka
+  CREATE_TRANSACTION_ENDPOINT: "/transaction/create" // <-- Sesuaikan dengan path endpoint create transaksi
+};
+
+const WA_NUMBER = "6285718072088";
+
+function buildOrderId(){
+  const rand = Math.random().toString(36).slice(2,6).toUpperCase();
+  return "ORD" + Date.now() + rand;
+}
+
+async function payWithSakurupiah(){
+  if(cart.length===0){ showToast("Keranjang masih kosong."); return; }
+  const amount = cartTotal();
+  if(amount < 500){ showToast("Minimum pembayaran Rp 500."); return; }
+
+  if(SAKURUPIAH_CONFIG.API_KEY === "ISI_API_KEY_SAKURUPIAH_DISINI" ||
+     SAKURUPIAH_CONFIG.MERCHANT_CODE === "ISI_MERCHANT_CODE_DISINI"){
+    showToast("API Sakurupiah belum dikonfigurasi. Isi SAKURUPIAH_CONFIG di script.");
+    return;
+  }
+
+  const orderId = buildOrderId();
+  const payBtn = document.getElementById("payBtn");
+  const originalLabel = payBtn.innerHTML;
+  payBtn.innerHTML = "Memproses...";
+  payBtn.disabled = true;
+
+  const baseUrl = window.location.origin + window.location.pathname;
+  const redirectUrl = `${baseUrl}?paid=1&order_id=${orderId}&amount=${amount}`;
+
+  try{
+    // Sesuaikan body request ini dengan field yang diminta dokumentasi Sakurupiah.
+    const res = await fetch(SAKURUPIAH_CONFIG.API_BASE_URL + SAKURUPIAH_CONFIG.CREATE_TRANSACTION_ENDPOINT, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${SAKURUPIAH_CONFIG.API_KEY}`
+      },
+      body: JSON.stringify({
+        merchant_code: SAKURUPIAH_CONFIG.MERCHANT_CODE,
+        order_id: orderId,
+        amount: amount,
+        redirect_url: redirectUrl,
+        items: cart.map(c=>({ name: c.name, qty: c.qty, price: c.price }))
+      })
+    });
+
+    if(!res.ok){ throw new Error("Gagal membuat transaksi (status " + res.status + ")"); }
+    const data = await res.json();
+
+    // Sesuaikan pengambilan field ini dengan bentuk response asli Sakurupiah.
+    const payUrl = data.payment_url || data.checkout_url || data.data?.payment_url || data.data?.url;
+
+    if(!payUrl){ throw new Error("Response API tidak berisi payment_url. Cek format response Sakurupiah."); }
+
+    let msg = `Order baru #${orderId}\n\n`;
+    cart.forEach(c=>{ msg += `• ${c.name} x${c.qty} — ${formatRp(c.price*c.qty)}\n`; });
+    msg += `\nTotal: ${formatRp(amount)}\nStatus: menunggu pembayaran QRIS/VA otomatis via Sakurupiah.`;
+    window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, "_blank");
+
+    window.location.href = payUrl;
+  }catch(err){
+    console.error("Sakurupiah error:", err);
+    showToast("Gagal memproses pembayaran. " + err.message);
+    payBtn.innerHTML = originalLabel;
+    payBtn.disabled = false;
+  }
+}
+
+function checkPaymentReturn(){
+  const params = new URLSearchParams(window.location.search);
+  if(params.get("paid")==="1" && params.get("order_id")){
+    const orderId = params.get("order_id");
+    const amount = params.get("amount");
+    const banner = document.getElementById("successBanner");
+    document.getElementById("successText").textContent =
+      `Pembayaran untuk order #${orderId} (${formatRp(Number(amount)||0)}) berhasil! Admin akan segera memproses pesananmu.`;
+    banner.classList.add("show");
+    cart = [];
+    renderCart();
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
+}
+
+function checkoutWA(){
+  if(cart.length===0){ showToast("Keranjang masih kosong."); return; }
+  let msg = "Halo, saya ingin memesan:\n\n";
+  cart.forEach(c=>{ msg += `• ${c.name} x${c.qty} — ${formatRp(c.price*c.qty)}\n`; });
+  msg += `\nTotal: ${formatRp(cartTotal())}\n\nMohon info langkah selanjutnya. Terima kasih!`;
+  window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, "_blank");
+}
+
+const drawer = document.getElementById("cartDrawer");
+const overlay = document.getElementById("overlay");
+function openDrawer(){ drawer.classList.add("show"); overlay.classList.add("show"); }
+function closeDrawer(){ drawer.classList.remove("show"); overlay.classList.remove("show"); }
+document.getElementById("cartOpenBtn").onclick = openDrawer;
+document.getElementById("drawerCloseBtn").onclick = closeDrawer;
+overlay.onclick = closeDrawer;
+
+let toastTimer;
+function showToast(text){
+  const t = document.getElementById("toast");
+  t.textContent = text;
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove("show"), 1800);
+}
+
+renderTabs();
+renderProducts();
+renderCart();
+checkPaymentReturn();
+
+/* ---------- scroll progress bar ---------- */
+const scrollbar = document.getElementById("scrollbar");
+function updateScrollbar(){
+  const h = document.documentElement;
+  const pct = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+  scrollbar.style.width = (isFinite(pct)?pct:0) + "%";
+}
+window.addEventListener("scroll", updateScrollbar, {passive:true});
+updateScrollbar();
+
+/* ---------- boot sequence preloader ---------- */
+const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const bootSteps = [
+  {txt:"memuat katalog produk", ok:"OK"},
+  {txt:"menyiapkan keranjang", ok:"OK"},
+  {txt:"siap", ok:"READY"}
+];
+function runBoot(){
+  const boot = document.getElementById("boot");
+  if(prefersReduced || sessionStorage.getItem("npBooted")){ boot.remove(); return; }
+  const linesEl = document.getElementById("bootLines");
+  const fill = document.getElementById("bootFill");
+  let i = 0;
+  function step(){
+    if(i >= bootSteps.length){
+      sessionStorage.setItem("npBooted","1");
+      setTimeout(()=>{ boot.classList.add("hide"); setTimeout(()=>boot.remove(), 450); }, 200);
+      return;
+    }
+    const s = bootSteps[i];
+    const row = document.createElement("div");
+    row.className = "boot-line";
+    row.innerHTML = `<span class="prompt">&gt;</span><span>${s.txt}...</span><span class="ok">${s.ok}</span>`;
+    linesEl.appendChild(row);
+    requestAnimationFrame(()=>row.classList.add("show"));
+    i++;
+    fill.style.width = Math.round((i/bootSteps.length)*100) + "%";
+    setTimeout(step, 200);
+  }
+  step();
+}
+runBoot();
+
+/* ---------- smooth page transition back to home ---------- */
+window.addEventListener("pageshow", ()=>{ document.body.style.opacity = "1"; });
+document.querySelectorAll('a[href="index.html"]').forEach(a=>{
+  a.addEventListener("click", (e)=>{
+    if(e.metaKey || e.ctrlKey || e.button===1) return;
+    e.preventDefault();
+    const href = a.getAttribute("href");
+    document.body.style.transition = "opacity .32s ease";
+    document.body.style.opacity = "0";
+    setTimeout(()=>{ window.location.href = href; }, 300);
+  });
+});
+</script>
+</body>
+</html>

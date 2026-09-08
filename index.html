@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>SantanicStore — Hosting Panel & Bot WhatsApp Otomatis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0B0F14; --bg-raise:#0F151C; --panel:#121821; --panel-hi:#161E29;
+    --line:#212B38; --line-soft:#1A222D; --text:#E7ECF2; --text-dim:#8A97A8;
+    --text-faint:#5C6779; --amber:#F2A93B; --amber-dim:#9C7433; --teal:#4FD1C5; --red:#E8635C;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; line-height:1.6; -webkit-font-smoothing:antialiased; overflow-x:hidden;}
+  h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif; font-weight:600; letter-spacing:-0.01em; color:var(--text);}
+  .mono{font-family:'JetBrains Mono',monospace;}
+  a{color:inherit; text-decoration:none;}
+  img{max-width:100%; display:block;}
+  button{font-family:inherit; cursor:pointer; border:none; background:none; color:inherit;}
+  .wrap{max-width:1120px; margin:0 auto; padding:0 22px;}
+  ::selection{background:var(--amber); color:#0B0F14;}
+  :focus-visible{outline:2px solid var(--teal); outline-offset:2px;}
+
+  .statusbar{background:#080B0F; border-bottom:1px solid var(--line-soft); font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-faint); letter-spacing:.02em;}
+  .statusbar .wrap{display:flex; align-items:center; justify-content:space-between; height:28px;}
+  .statusbar .dot{width:6px; height:6px; border-radius:50%; background:var(--teal); display:inline-block; margin-right:6px; box-shadow:0 0 0 3px rgba(79,209,197,.1);}
+  .statusbar .live{color:var(--teal);}
+  .statusbar .right{display:flex; gap:16px;}
+  .statusbar .right span{display:none;}
+  @media(min-width:640px){ .statusbar .right span{display:inline;} }
+
+  header{position:sticky; top:0; z-index:60; background:rgba(11,15,20,.92); backdrop-filter:blur(12px); border-bottom:1px solid var(--line-soft);}
+  .nav{display:flex; align-items:center; justify-content:space-between; height:60px;}
+  .brand{display:flex; align-items:center; gap:10px; font-family:'Space Grotesk'; font-weight:700; font-size:17px;}
+  .brand .mark{width:32px; height:32px; border-radius:8px; background:linear-gradient(135deg,var(--amber),#d98a2a); display:flex; align-items:center; justify-content:center; color:#0B0F14; font-weight:700; font-size:15px;}
+  .navlinks{display:none; gap:32px; font-size:14px; color:var(--text-dim);}
+  .navlinks a:hover{color:var(--text);}
+  @media(min-width:840px){ .navlinks{display:flex;} }
+  .navactions{display:flex; align-items:center; gap:10px;}
+  .btn{display:inline-flex; align-items:center; gap:8px; padding:11px 20px; border-radius:7px; font-size:14px; font-weight:600; transition:all .15s ease;}
+  .btn:active{transform:scale(.96);}
+  .btn-amber{background:var(--amber); color:#0B0F14;}
+  .btn-amber:hover{background:#ffc659;}
+  .btn-outline{border:1.5px solid var(--line); color:var(--text-dim);}
+  .btn-outline:hover{border-color:var(--text); background:rgba(255,255,255,.03);}
+
+  section{padding:72px 0;}
+  .eyebrow{font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--teal); letter-spacing:.05em; margin-bottom:16px; display:flex; align-items:center; gap:8px; text-transform:uppercase;}
+  .eyebrow::before{content:''; width:14px; height:1px; background:var(--teal);}
+  .section-head{max-width:660px; margin-bottom:48px;}
+  .section-head h2{font-size:clamp(28px,3.4vw,38px); margin-bottom:14px; line-height:1.2;}
+  .section-head p{color:var(--text-dim); font-size:15px; line-height:1.65;}
+
+  .hero{padding:14px 0 48px; border-bottom:1px solid var(--line-soft); position:relative;}
+  .hero-grid{display:grid; grid-template-columns:1fr; gap:24px; align-items:center;}
+  @media(min-width:900px){ .hero-grid{grid-template-columns:1fr; gap:28px;} }
+  .badge{display:inline-flex; align-items:center; gap:8px; padding:7px 14px; border:1px solid rgba(79,209,197,.3); border-radius:20px; font-size:12px; color:var(--teal); margin-bottom:24px; font-family:'JetBrains Mono'; background:rgba(79,209,197,.05);}
+  .badge .pulse{width:6px; height:6px; border-radius:50%; background:var(--teal); animation:pulse 2s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{opacity:1; box-shadow:0 0 0 0 rgba(79,209,197,.4);} 50%{opacity:.7; box-shadow:0 0 0 6px rgba(79,209,197,0);}}
+  .hero h1{font-size:clamp(32px,3.6vw,46px); line-height:1.14; margin-bottom:20px; max-width:16ch;}
+  .hero p.lead{color:var(--text-dim); font-size:16px; max-width:50ch; margin-bottom:32px; line-height:1.7;}
+  .hero-ctas{display:flex; flex-wrap:wrap; gap:14px; margin-bottom:40px;}
+  .hero-stats{display:flex; gap:40px; flex-wrap:wrap;}
+  .hero-stats div b{display:block; font-family:'Space Grotesk'; font-size:24px; color:var(--text); font-weight:700;}
+  .hero-stats div span{font-size:12px; color:var(--text-faint); text-transform:uppercase; letter-spacing:.05em;}
+
+  .featured-card{border:1px solid var(--line); border-radius:10px; overflow:hidden; background:var(--panel); box-shadow:0 24px 48px -12px rgba(0,0,0,.4); display:grid; grid-template-columns:1fr; gap:0;}
+  @media(min-width:900px){.featured-card{grid-template-columns:1fr 1.1fr; gap:0;}}
+  .featured-img{width:100%; height:300px; object-fit:cover; background:rgba(79,209,197,.1); order:2;}
+  @media(min-width:900px){.featured-img{height:100%; min-height:400px; order:2;}}
+  .featured-content{padding:32px; display:flex; flex-direction:column; justify-content:space-between; order:1;}
+
+  .featured-img-section{width:100%; background:var(--bg); padding:0; margin:0 0 -6px 0;}
+  .featured-img-section img{width:100%; height:auto; display:block; max-height:280px; object-fit:cover;}
+
+  .grid4{display:grid; grid-template-columns:1fr; gap:1px; background:var(--line-soft); border:1px solid var(--line-soft); border-radius:10px; overflow:hidden;}
+  @media(min-width:700px){ .grid4{grid-template-columns:repeat(2,1fr);} }
+  @media(min-width:1000px){ .grid4{grid-template-columns:repeat(4,1fr);} }
+  .fcard{background:var(--panel); padding:28px; position:relative;}
+  .fcard .ic{width:40px; height:40px; margin-bottom:16px; display:flex; align-items:center; justify-content:center;}
+  .fcard h3{font-size:16px; margin-bottom:8px; font-weight:600;}
+  .fcard p{font-size:13.5px; color:var(--text-dim); line-height:1.6;}
+
+  .split3{display:grid; grid-template-columns:1fr; gap:24px;}
+  @media(min-width:820px){ .split3{grid-template-columns:repeat(3,1fr);} }
+  .bigfeat{border:1px solid var(--line); border-radius:10px; padding:32px; background:var(--panel);}
+  .bigfeat .tag{font-family:'JetBrains Mono'; font-size:11px; color:var(--teal); margin-bottom:12px; text-transform:uppercase; letter-spacing:.05em;}
+  .bigfeat h3{font-size:18px; margin-bottom:10px;}
+  .bigfeat p{color:var(--text-dim); font-size:14px; line-height:1.65;}
+
+  .kgrid{display:grid; grid-template-columns:repeat(2,1fr); gap:16px;}
+  @media(min-width:820px){ .kgrid{grid-template-columns:repeat(4,1fr);} }
+  .kcard{border:1px solid var(--line); border-radius:10px; padding:22px; text-align:left;}
+  .kcard .num{font-family:'JetBrains Mono'; font-size:11px; color:var(--text-faint); margin-bottom:10px; text-transform:uppercase; letter-spacing:.05em;}
+  .kcard h4{font-size:15px; margin-bottom:8px;}
+  .kcard p{font-size:13px; color:var(--text-dim); line-height:1.6;}
+
+  .faq-item{border-bottom:1px solid var(--line-soft);}
+  .faq-q{width:100%; text-align:left; display:flex; align-items:center; justify-content:space-between; padding:18px 0; font-size:15px; font-weight:600; color:var(--text);}
+  .faq-q .plus{font-family:'JetBrains Mono'; color:var(--text-faint); font-size:18px; transition:transform .2s ease;}
+  .faq-item.open .plus{transform:rotate(45deg); color:var(--amber);}
+  .faq-a{max-height:0; overflow:hidden; transition:max-height .25s ease;}
+  .faq-a p{padding:0 0 20px; color:var(--text-dim); font-size:14px; line-height:1.7; max-width:68ch;}
+
+  .contact-grid{display:grid; grid-template-columns:1fr; gap:36px;}
+  @media(min-width:900px){ .contact-grid{grid-template-columns:.85fr 1.15fr;} }
+  .cline{display:flex; gap:14px; align-items:flex-start; padding:16px 0; border-bottom:1px solid var(--line-soft);}
+  .cline .ic{width:36px; height:36px; border:1px solid var(--line); border-radius:6px; display:flex; align-items:center; justify-content:center; flex:0 0 auto; color:var(--teal);}
+  .cline h4{font-size:14px; margin-bottom:4px; font-weight:600;}
+  .cline p, .cline a{font-size:13.5px; color:var(--text-dim);}
+  .cline a:hover{color:var(--teal);}
+
+  .form-box{border:1px solid var(--line); border-radius:10px; padding:28px; background:var(--panel);}
+  .field{margin-bottom:18px;}
+  .field label{display:block; font-size:12px; color:var(--text-dim); margin-bottom:8px; font-family:'JetBrains Mono'; text-transform:uppercase; letter-spacing:.05em;}
+  .field input, .field textarea{display:block; width:100%; background:rgba(255,255,255,.03); border:1px solid var(--line); border-radius:6px; padding:11px 14px; font-size:14px; color:var(--text); font-family:inherit; transition:border .15s ease;}
+  .field input:focus, .field textarea:focus{border-color:var(--teal); outline:none; background:rgba(79,209,197,.05);}
+  .field textarea{resize:vertical; min-height:110px;}
+
+  .wa-float{position:fixed; bottom:28px; right:24px; z-index:99; width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg,#31a24c,#25a940); display:flex; align-items:center; justify-content:center; box-shadow:0 8px 24px rgba(49,162,76,.3); transition:all .2s ease;}
+  .wa-float:hover{transform:scale(1.08); box-shadow:0 12px 32px rgba(49,162,76,.4);}
+  .wa-float svg{width:28px; height:28px;}
+
+  footer{border-top:1px solid var(--line-soft); padding:48px 0; background:var(--bg-raise);}
+  .foot-grid{display:grid; grid-template-columns:1fr; gap:40px; margin-bottom:36px;}
+  @media(min-width:700px){ .foot-grid{grid-template-columns:2fr 1fr 1fr;} }
+  .foot-grid h4{font-size:12px; color:var(--text-dim); text-transform:uppercase; letter-spacing:.05em; margin-bottom:12px;}
+  .foot-grid ul{list-style:none;}
+  .foot-grid ul li{margin-bottom:8px;}
+  .foot-grid ul li a{color:var(--text-dim); font-size:13.5px;}
+  .foot-grid ul li a:hover{color:var(--text);}
+  .foot-bottom{display:flex; flex-direction:column; gap:8px; font-size:12px; color:var(--text-faint); border-top:1px solid var(--line-soft); padding-top:24px;}
+  @media(min-width:700px){ .foot-bottom{flex-direction:row; justify-content:space-between;} }
+
+  .reveal{opacity:0; transform:translateY(20px); animation:reveal .6s ease-out forwards;}
+  @keyframes reveal{to{opacity:1; transform:translateY(0);}}
+
+  /* ---------- scroll progress ---------- */
+  .scrollbar{position:fixed; top:0; left:0; height:2px; width:0%; background:linear-gradient(90deg,var(--teal),var(--amber)); z-index:200; transition:width .1s linear;}
+
+  /* ---------- boot / preloader ---------- */
+  .boot{position:fixed; inset:0; z-index:300; background:#080B0F; display:flex; align-items:center; justify-content:center; transition:opacity .5s ease, visibility .5s ease;}
+  .boot.hide{opacity:0; visibility:hidden; pointer-events:none;}
+  .boot-box{width:min(420px,86vw); font-family:'JetBrains Mono',monospace; font-size:12.5px;}
+  .boot-top{display:flex; align-items:center; gap:8px; margin-bottom:14px; color:var(--text-faint);}
+  .boot-top .bdot{width:8px; height:8px; border-radius:50%; background:var(--line);}
+  .boot-top .bdot:nth-child(1){background:#E8635C;} .boot-top .bdot:nth-child(2){background:#F2A93B;} .boot-top .bdot:nth-child(3){background:#4FD1C5;}
+  .boot-lines{min-height:132px;}
+  .boot-line{opacity:0; color:var(--text-dim); margin-bottom:7px; display:flex; gap:8px;}
+  .boot-line.show{opacity:1;}
+  .boot-line .ok{color:var(--teal); margin-left:auto;}
+  .boot-line .prompt{color:var(--amber-dim);}
+  .boot-bar-track{margin-top:16px; height:2px; background:var(--line-soft); border-radius:2px; overflow:hidden;}
+  .boot-bar-fill{height:100%; width:0%; background:linear-gradient(90deg,var(--teal),var(--amber)); transition:width .25s ease;}
+  .boot-pct{margin-top:8px; color:var(--text-faint); font-size:11px; letter-spacing:.05em;}
+  @media(prefers-reduced-motion:reduce){ .boot{display:none;} }
+
+  /* ---------- hero terminal mockup ---------- */
+  .hero{padding:32px 0 56px;}
+  .hero-grid{grid-template-columns:1fr;}
+  @media(min-width:960px){ .hero-grid{grid-template-columns:1.05fr .95fr; gap:48px; align-items:center;} }
+  .hero-visual{display:none;}
+  @media(min-width:960px){ .hero-visual{display:block;} }
+  .term-card{position:relative; border:1px solid var(--line); border-radius:12px; background:var(--panel); box-shadow:0 30px 60px -20px rgba(0,0,0,.55); overflow:hidden;}
+  .term-head{display:flex; align-items:center; gap:8px; padding:12px 16px; border-bottom:1px solid var(--line-soft); background:var(--bg-raise);}
+  .term-head .tdot{width:9px; height:9px; border-radius:50%;}
+  .term-head .tdot:nth-child(1){background:#E8635C;} .term-head .tdot:nth-child(2){background:#F2A93B;} .term-head .tdot:nth-child(3){background:#4FD1C5;}
+  .term-head span{margin-left:8px; font-family:'JetBrains Mono'; font-size:11px; color:var(--text-faint);}
+  .term-body{padding:20px; font-family:'JetBrains Mono',monospace; font-size:12.5px; min-height:280px; display:flex; flex-direction:column; gap:11px;}
+  .term-row{display:flex; gap:10px; opacity:0; transform:translateY(6px); animation:trow .4s ease forwards;}
+  .term-row .who{color:var(--text-faint); flex:0 0 auto; width:64px;}
+  .term-row.bot .who{color:var(--teal);}
+  .term-row.sys .who{color:var(--amber-dim);}
+  .term-row .msg{color:var(--text-dim);}
+  .term-row.bot .msg{color:var(--text);}
+  @keyframes trow{to{opacity:1; transform:translateY(0);}}
+  .term-cursor{display:inline-block; width:6px; height:12px; background:var(--teal); margin-left:2px; animation:blink 1s step-end infinite; vertical-align:-2px;}
+  @keyframes blink{50%{opacity:0;}}
+  .term-foot{border-top:1px solid var(--line-soft); padding:12px 16px; display:flex; justify-content:space-between; font-family:'JetBrains Mono'; font-size:10.5px; color:var(--text-faint);}
+  .term-foot .live{color:var(--teal); display:flex; align-items:center; gap:6px;}
+  .term-foot .live::before{content:''; width:6px; height:6px; border-radius:50%; background:var(--teal); animation:pulse 2s ease-in-out infinite;}
+
+  .hero-bg{position:absolute; inset:0; overflow:hidden; z-index:-1; opacity:.5;}
+  .hero-bg svg{position:absolute; top:-10%; right:-8%; width:60%; max-width:560px; opacity:.35;}
+
+  /* ---------- top brand banner ---------- */
+  .brand-banner{padding:20px 0 0;}
+  .banner-frame{border-radius:14px; overflow:hidden; border:1px solid var(--line); box-shadow:0 24px 60px -24px rgba(242,169,59,.28); line-height:0;}
+  .banner-frame img{width:100%; height:auto; display:block;}
+</style>
+</head>
+<body>
+
+<div class="boot" id="boot">
+  <div class="boot-box">
+    <div class="boot-top"><span class="bdot"></span><span class="bdot"></span><span class="bdot"></span><span>santanicstore@engine:</span></div>
+    <div class="boot-lines" id="bootLines"></div>
+    <div class="boot-bar-track"><div class="boot-bar-fill" id="bootFill"></div></div>
+    <div class="boot-pct" id="bootPct">0%</div>
+  </div>
+</div>
+
+<div class="scrollbar" id="scrollbar"></div>
+
+<div class="statusbar">
+  <div class="wrap">
+    <div></div>
+    <div class="right">
+      <span id="clock">--:-- WIB</span>
+    </div>
+  </div>
+</div>
+
+<header>
+  <div class="wrap nav">
+    <div class="brand"><span class="mark">S</span>Santanic Store</div>
+    <div class="navlinks">
+      <a href="#layanan">Layanan</a>
+      <a href="#fitur">Fitur</a>
+      <a href="#faq">FAQ</a>
+      <a href="#kontak">Kontak</a>
+    </div>
+    <div class="navactions">
+      <a href="katalog.html" class="btn btn-amber">Lihat Katalog</a>
+    </div>
+  </div>
+</header>
+
+<section class="brand-banner">
+  <div class="wrap">
+    <!-- Ganti gambar banner: cukup ubah "src" di bawah ini ke link/file baru -->
+    <div class="banner-frame">
+      <img src="banner.jpg" alt="Santanic Store — Digital Solutions & Server Services">
+    </div>
+  </div>
+</section>
+
+<section class="hero" style="position:relative;">
+  <div class="hero-bg" aria-hidden="true">
+    <svg viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="200" cy="200" r="199" stroke="#4FD1C5" stroke-opacity=".15"/>
+      <circle cx="200" cy="200" r="140" stroke="#4FD1C5" stroke-opacity=".12"/>
+      <circle cx="200" cy="200" r="80" stroke="#F2A93B" stroke-opacity=".15"/>
+      <path d="M200 1v79M200 320v79M1 200h79M320 200h79" stroke="#4FD1C5" stroke-opacity=".1"/>
+    </svg>
+  </div>
+  <div class="wrap hero-grid">
+    <div>
+      <h1>Solusi Digital untuk Kebutuhan Anda.</h1>
+      <p class="lead">Panel Pterodactyl, script bot WhatsApp, hingga domain — semua diprosesnya sistem kami begitu pembayaran masuk. Tanpa antre, tanpa nunggu admin online.</p>
+      <div class="hero-ctas">
+        <a href="katalog.html" class="btn btn-amber">Lihat Katalog Produk</a>
+        <a href="https://wa.me/6281234567890" class="btn btn-outline">Chat via WhatsApp</a>
+      </div>
+      <div class="hero-stats">
+        <div><b>1.200+</b><span>Server aktif dibuat</span></div>
+        <div><b>24/7</b><span>Bot balas otomatis</span></div>
+        <div><b>&lt;30 detik</b><span>Waktu pengiriman</span></div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="term-card">
+        <div class="term-head"><span class="tdot"></span><span class="tdot"></span><span class="tdot"></span><span>bot-whatsapp — santanicstore</span></div>
+        <div class="term-body" id="termBody"></div>
+        <div class="term-foot"><span class="live">order diproses otomatis</span><span id="termClock">--:--:--</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="layanan">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Layanan Kami</div>
+      <h2>Semua yang kamu butuhkan untuk bisnis game server.</h2>
+    </div>
+    <div class="grid4 reveal">
+      <div class="fcard">
+        <div class="ic">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M2 17h20"/>
+          </svg>
+        </div>
+        <h3>Panel Pterodactyl</h3>
+        <p>Dashboard server game yang powerful, langsung ready deploy dengan custom script bot WhatsApp terintegrasi.</p>
+      </div>
+      <div class="fcard">
+        <div class="ic">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+        </div>
+        <h3>Bot WhatsApp Otomatis</h3>
+        <p>Script siap pakai yang otomatis balas chat, kirim invoice, dan proses order tanpa bantuan manual.</p>
+      </div>
+      <div class="fcard">
+        <div class="ic">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+          </svg>
+        </div>
+        <h3>Domain & Hosting</h3>
+        <p>Paket domain & hosting terintegrasi dengan panel, semuanya bisa dikelola di satu tempat.</p>
+      </div>
+      <div class="fcard">
+        <div class="ic">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/><path d="M10 17l-2-2m4 0l2-2"/>
+          </svg>
+        </div>
+        <h3>Support 24/7</h3>
+        <p>Garansi respon cepat via WhatsApp. Tim siap bantu setup, troubleshoot, atau upgrade kapan saja.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="fitur" style="background:var(--bg-raise); border-top:1px solid var(--line-soft); border-bottom:1px solid var(--line-soft);">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Kenapa Pilih Santanic Store</div>
+      <h2>Fitur yang benar-benar berguna, bukan janji kosong.</h2>
+    </div>
+    <div class="split3 reveal">
+      <div class="bigfeat">
+        <div class="tag">Pembayaran</div>
+        <h3>Otomatis QRIS & VA</h3>
+        <p>Integrasi dengan Sakurupiah, payment gateway pilihan kami. Pembayaran langsung masuk, pesanan langsung diproses.</p>
+      </div>
+      <div class="bigfeat">
+        <div class="tag">Pengiriman</div>
+        <h3>Instant Delivery via WhatsApp</h3>
+        <p>Setelah pembayaran terkonfirmasi, pelanggan langsung terima akses server beserta detail login via chat WhatsApp pribadi mereka.</p>
+      </div>
+      <div class="bigfeat">
+        <div class="tag">Manajemen</div>
+        <h3>Dashboard Admin Lengkap</h3>
+        <p>Pantau order, status pelanggan, revenue, dan riwayat transaksi. Semuanya tercatat otomatis, zero manual entry.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Paket Tersedia</div>
+      <h2>Lihat daftar lengkap produk kami.</h2>
+    </div>
+    <div class="kgrid reveal">
+      <div class="kcard">
+        <div class="num">01. Server</div>
+        <h4>Pterodactyl Setup</h4>
+        <p>Install dan konfigurasi panel lengkap dengan file manager, bot integration, dan daily backup otomatis.</p>
+      </div>
+      <div class="kcard">
+        <div class="num">02. Bot</div>
+        <h4>WhatsApp Script</h4>
+        <p>Source code bot ready deploy, customize sesuai brand kamu, multi-device support, webhook integration.</p>
+      </div>
+      <div class="kcard">
+        <div class="num">03. Domain</div>
+        <h4>Domain & SSL</h4>
+        <p>Registrasi domain baru atau transfer existing. SSL certificate gratis seumur hidup, auto-renew.</p>
+      </div>
+      <div class="kcard">
+        <div class="num">04. Dukungan</div>
+        <h4>Chat & Video Support</h4>
+        <p>Konsultasi gratis untuk setup awal, custom request, scaling infrastructure, dan training tim kamu.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="faq" style="background:var(--bg-raise); border-top:1px solid var(--line-soft);">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Pertanyaan Umum</div>
+      <h2>Yang sering ditanyain.</h2>
+    </div>
+    <div class="reveal" style="max-width:720px;">
+      <div class="faq-item">
+        <button class="faq-q">Apa perbedaan Santanic Store dengan penyedia hosting lain?
+          <span class="plus">+</span></button>
+        <div class="faq-a"><p>Santanic Store bukan sekadar panel hosting. Kami integrated dengan bot WhatsApp yang otomatis, payment gateway otomatis, dan sistem delivery otomatis. Pelanggan order, bayar, langsung terima akses tanpa perlu admin ngirim manual. Semua yang namanya repetitif, sudah kami otomasi.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Berapa lama proses setup awal?
+          <span class="plus">+</span></button>
+        <div class="faq-a"><p>1–2 jam untuk setup panel lengkap + integrasi bot. Kami yang handle semua, kamu tinggal tunggu notifikasi WhatsApp kalau sudah siap. Setelah itu, sistem berjalan otomatis 24/7.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Bagaimana sistem pengiriman otomatis bekerja?
+          <span class="plus">+</span></button>
+        <div class="faq-a"><p>Setelah pembayaran terkonfirmasi, sistem kami otomatis membuatkan server di Pterodactyl panel dan mengirimkan detail login lewat WhatsApp — tanpa perlu menunggu admin.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Bagaimana proses pembayarannya, apakah otomatis?
+          <span class="plus">+</span></button>
+        <div class="faq-a"><p>Ya. Di halaman katalog, setelah memilih produk kamu diarahkan ke halaman pembayaran Sakurupiah untuk membayar via QRIS atau Virtual Account. Setelah berhasil, kamu otomatis dikembalikan dengan konfirmasi, dan admin menerima detail pesanan otomatis via WhatsApp.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Apakah bot WhatsApp selalu aktif 24 jam?
+          <span class="plus">+</span></button>
+        <div class="faq-a"><p>Ya. Bot dihosting di server dengan uptime 99.9%, jadi selalu siap memproses pesanan dan membalas pelanggan kapan pun.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Bagaimana cara klaim garansi?
+          <span class="plus">+</span></button>
+        <div class="faq-a"><p>Cukup chat via WhatsApp dengan menyertakan nomor order — tim kami akan memprosesnya tanpa syarat berbelit.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="kontak">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Hubungi Kami</div>
+      <h2>Punya pertanyaan atau kebutuhan khusus?</h2>
+    </div>
+    <div class="contact-grid reveal">
+      <div>
+        <div class="cline">
+          <div class="ic">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+          </div>
+          <div><h4>WhatsApp Chat</h4><a href="https://wa.me/6285718072088" target="_blank" rel="noopener">0857-1807-2088</a></div>
+        </div>
+        <div class="cline">
+          <div class="ic">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 6"/>
+            </svg>
+          </div>
+          <div><h4>Email Support</h4><a href="mailto:officialsantanic@gmail.com">officialsantanic@gmail.com</a></div>
+        </div>
+        <div class="cline">
+          <div class="ic">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+          <div><h4>Jam Operasional</h4><p>Bot aktif 24/7 · Admin merespons 08.00–22.00 WIB</p></div>
+        </div>
+      </div>
+      <div class="form-box">
+        <div class="field"><label>Nama Lengkap</label><input type="text" id="cfName" placeholder="Nama kamu"></div>
+        <div class="field"><label>Pesan Anda</label><textarea id="cfMsg" placeholder="Tulis pertanyaan atau kebutuhanmu..."></textarea></div>
+        <button class="btn btn-amber" style="width:100%; justify-content:center" onclick="sendContactForm()">Kirim via WhatsApp</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="brand" style="margin-bottom:12px"><span class="mark">S</span>Santanic Store</div>
+        <p style="color:var(--text-dim); font-size:13px; max-width:40ch; line-height:1.7;">Solusi otomatisasi hosting server game berbasis Pterodactyl Panel dan bot WhatsApp. Mudah, cepat, dan aman.</p>
+      </div>
+      <div>
+        <h4>Produk</h4>
+        <ul>
+          <li><a href="katalog.html">Panel Pterodactyl</a></li>
+          <li><a href="katalog.html">Script Bot WhatsApp</a></li>
+          <li><a href="katalog.html">Domain & Hosting</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Hubungi Kami</h4>
+        <ul>
+          <li><a href="https://wa.me/6281234567890" target="_blank" rel="noopener">WhatsApp</a></li>
+          <li><a href="mailto:officialsantanic@gmail.com">Email</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Santanic Store. Seluruh hak cipta dilindungi.</span>
+      <span>Dibuat dengan sistem otomatisasi Santanic Store</span>
+    </div>
+  </div>
+</footer>
+
+<a href="https://wa.me/6281234567890" target="_blank" rel="noopener" class="wa-float" aria-label="Chat WhatsApp">
+  <svg viewBox="0 0 24 24" fill="#fff"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.2h.01c5.46 0 9.9-4.45 9.9-9.91C21.96 6.45 17.5 2 12.04 2zm5.8 14.05c-.24.68-1.4 1.3-1.93 1.38-.5.08-1.11.11-1.79-.11-.41-.13-.94-.3-1.62-.6-2.85-1.23-4.71-4.1-4.85-4.29-.14-.19-1.16-1.54-1.16-2.94 0-1.4.73-2.08 1-2.37.24-.27.5-.34.66-.34l.48.01c.15 0 .36-.06.56.43.24.6.8 2 .87 2.14.07.14.11.31.02.5-.09.18-.14.29-.27.45-.14.16-.29.35-.41.47-.14.13-.28.28-.12.55.16.27.71 1.17 1.53 1.89 1.05.94 1.94 1.23 2.21 1.37.27.14.43.11.59-.06.16-.18.68-.79.86-1.06.18-.27.36-.22.6-.13.24.09 1.55.73 1.82.87.27.13.44.2.51.31.07.11.07.65-.17 1.33z"/></svg>
+</a>
+
+<script>
+function sendContactForm(){
+  const WA_NUMBER = "6285718072088";
+  const name = document.getElementById("cfName").value.trim();
+  const message = document.getElementById("cfMsg").value.trim();
+  if(!message){ alert("Tulis pesan terlebih dahulu."); return; }
+  const text = `Halo, saya ${name || "seorang calon pelanggan"}.\n\n${message}`;
+  window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(text)}`, "_blank");
+}
+
+document.querySelectorAll(".faq-item").forEach(item=>{
+  const q = item.querySelector(".faq-q");
+  const a = item.querySelector(".faq-a");
+  q.onclick = ()=>{
+    const isOpen = item.classList.contains("open");
+    document.querySelectorAll(".faq-item.open").forEach(o=>{
+      o.classList.remove("open");
+      o.querySelector(".faq-a").style.maxHeight = null;
+    });
+    if(!isOpen){
+      item.classList.add("open");
+      a.style.maxHeight = a.scrollHeight + "px";
+    }
+  };
+});
+
+window.addEventListener("pageshow", ()=>{ document.body.style.opacity = "1"; });
+
+function tickClock(){
+  const el = document.getElementById("clock");
+  const d = new Date();
+  el.textContent = d.toLocaleTimeString("id-ID", {hour12:false}) + " WIB";
+}
+tickClock();
+setInterval(tickClock, 1000);
+
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); } });
+}, {threshold:.15});
+document.querySelectorAll(".reveal").forEach(el=>io.observe(el));
+
+/* ---------- scroll progress bar ---------- */
+const scrollbar = document.getElementById("scrollbar");
+function updateScrollbar(){
+  const h = document.documentElement;
+  const pct = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+  scrollbar.style.width = (isFinite(pct)?pct:0) + "%";
+}
+window.addEventListener("scroll", updateScrollbar, {passive:true});
+updateScrollbar();
+
+/* ---------- boot sequence preloader ---------- */
+const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const bootSteps = [
+  {t:"init", txt:"booting santanicstore_engine", ok:"OK"},
+  {t:"net",  txt:"menghubungkan gateway whatsapp", ok:"OK"},
+  {t:"panel",txt:"memuat panel pterodactyl", ok:"OK"},
+  {t:"pay",  txt:"sinkronisasi payment gateway", ok:"OK"},
+  {t:"ready",txt:"sistem siap", ok:"READY"}
+];
+function runBoot(){
+  const boot = document.getElementById("boot");
+  if(prefersReduced || sessionStorage.getItem("npBooted")){ boot.remove(); return; }
+  const linesEl = document.getElementById("bootLines");
+  const fill = document.getElementById("bootFill");
+  const pct = document.getElementById("bootPct");
+  let i = 0;
+  function step(){
+    if(i >= bootSteps.length){
+      sessionStorage.setItem("npBooted","1");
+      setTimeout(()=>{ boot.classList.add("hide"); setTimeout(()=>boot.remove(), 550); }, 260);
+      return;
+    }
+    const s = bootSteps[i];
+    const row = document.createElement("div");
+    row.className = "boot-line";
+    row.innerHTML = `<span class="prompt">&gt;</span><span>${s.txt}...</span><span class="ok">${s.ok}</span>`;
+    linesEl.appendChild(row);
+    requestAnimationFrame(()=>row.classList.add("show"));
+    i++;
+    const p = Math.round((i/bootSteps.length)*100);
+    fill.style.width = p + "%";
+    pct.textContent = p + "%";
+    setTimeout(step, 230);
+  }
+  step();
+}
+runBoot();
+
+/* ---------- hero terminal chat simulation ---------- */
+const termScript = [
+  {who:"pelanggan", cls:"", msg:"Halo min, mau order Panel Pterodactyl Pro"},
+  {who:"santanicstore", cls:"bot", msg:"Order diterima. Total Rp1.500.000 — QRIS dikirim di bawah ini."},
+  {who:"sistem", cls:"sys", msg:"Pembayaran terkonfirmasi ✓"},
+  {who:"santanicstore", cls:"bot", msg:"Server sedang dibuat di panel..."},
+  {who:"sistem", cls:"sys", msg:"Server ready dalam 24 detik ✓"},
+  {who:"santanicstore", cls:"bot", msg:"Detail login sudah terkirim. Selamat menikmati!"}
+];
+function runTerminal(){
+  const body = document.getElementById("termBody");
+  if(!body || prefersReduced) return;
+  body.innerHTML = "";
+  let i = 0;
+  function addRow(){
+    if(i >= termScript.length){ setTimeout(()=>{ i=0; body.innerHTML=""; addRow(); }, 2600); return; }
+    const s = termScript[i];
+    const row = document.createElement("div");
+    row.className = "term-row " + s.cls;
+    row.innerHTML = `<span class="who">${s.who}</span><span class="msg">${s.msg}</span>`;
+    body.appendChild(row);
+    i++;
+    setTimeout(addRow, 750);
+  }
+  addRow();
+}
+setTimeout(runTerminal, prefersReduced ? 0 : 1500);
+
+function tickTermClock(){
+  const el = document.getElementById("termClock");
+  if(!el) return;
+  el.textContent = new Date().toLocaleTimeString("id-ID",{hour12:false});
+}
+tickTermClock(); setInterval(tickTermClock, 1000);
+
+/* ---------- smooth page transition to internal links ---------- */
+document.querySelectorAll('a[href="katalog.html"]').forEach(a=>{
+  a.addEventListener("click", (e)=>{
+    if(e.metaKey || e.ctrlKey || e.button===1) return;
+    e.preventDefault();
+    const href = a.getAttribute("href");
+    document.body.style.transition = "opacity .32s ease";
+    document.body.style.opacity = "0";
+    setTimeout(()=>{ window.location.href = href; }, 300);
+  });
+});
+</script>
+</body>
+</html>
